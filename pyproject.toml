@@ -1,0 +1,113 @@
+[project]
+name = "autocad-mcp"
+version = "0.1.0"
+description = "An experimental Model Context Protocol bridge for full AutoCAD 2021-2026 on Windows"
+authors = [
+    {name = "AutoCAD MCP Contributors"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+keywords = ["autocad", "mcp", "3d", "cad", "automation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+dependencies = [
+    "flask>=3.1.3,<4",
+    "pyautocad>=0.2.0,<0.3; sys_platform == 'win32'",
+    "numpy>=2.1.0,<3",
+    "scipy>=1.14.1,<2",
+    "pywin32>=311; sys_platform == 'win32'",
+    "fastapi>=0.116.1,<0.117",
+    "uvicorn[standard]>=0.35.0,<0.36",
+    "python-multipart>=0.0.32,<0.0.33",
+    "mcp>=1,<2",
+    "websockets>=12.0,<13",
+    "aiofiles>=23.2.0,<24",
+    "jinja2>=3.1.2,<4",
+    "requests>=2.33.0,<3",
+    "python-dotenv>=1.2.4,<2",
+    "cryptography>=50.0.0,<51",
+]
+
+[project.optional-dependencies]
+ml = [
+    "scikit-learn>=1.4.0,<2",
+    "transformers>=5.10.1,<6",
+    "torch>=2.14.1,<3",
+    "accelerate>=1.15.0,<1.16",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3,<10",
+    "pytest-cov>=4,<5",
+    "pytest-html>=4.0.0,<5",
+    "pytest-mock>=3.12.0,<4",
+    "black>=26.3.1,<27",
+    "ruff>=0.5.5,<0.6",
+    "mypy>=1.0,<2",
+    "bandit>=1.7,<2",
+    "safety>=2,<3",
+    "packaging>=24,<26",
+]
+
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autocad_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+markers = [
+    "autocad: requires explicit disposable-DWG authorization",
+]
+
+# Black configuration
+[tool.black]
+line-length = 100
+target-version = ['py312']
+include = '\\.pyi?$'
+extend-exclude = '''
+/(
+    DELETED
+    | migration_backup
+    | \.git
+)/
+'''
+
+# Ruff configuration
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C90", "I", "N", "UP", "S", "B", "A", "C4", "T10", "T20"]
+ignore = ["S101"]  # Allow assert statements in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S106"]  # Allow hardcoded passwords in tests
+
+# MyPy configuration
+[tool.mypy]
+python_version = "3.12"
+mypy_path = ["$MYPY_CONFIG_FILE_DIR/src"]
+explicit_package_bases = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+exclude = ["DELETED/", "migration_backup/"]
+# COM modules are loaded through importlib behind the Windows adapter boundary, so no
+# static import overrides are needed; mypy reports such sections as unused.
+
+# Bandit configuration
+[tool.bandit]
+exclude_dirs = ["tests", "DELETED", "migration_backup"]
+skips = ["B101"]  # Skip assert_used test

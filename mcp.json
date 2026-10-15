@@ -1,0 +1,83 @@
+{
+  "name": "autocad-mcp",
+  "version": "0.1.0",
+  "description": "An experimental Model Context Protocol bridge for full AutoCAD 2021-2026 on Windows",
+  "author": "AutoCAD MCP Contributors",
+  "license": "MIT",
+  "homepage": "https://github.com/ahmetcemkaraca/AutoCAD_MCP",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahmetcemkaraca/AutoCAD_MCP.git"
+  },
+  "keywords": [
+    "autocad",
+    "mcp",
+    "cad",
+    "automation",
+    "windows"
+  ],
+  "mcpServers": {
+    "autocad-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "autocad_mcp.server"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "name": "server_status",
+      "description": "Report MCP server and AutoCAD availability."
+    },
+    {
+      "name": "list_entities",
+      "description": "List entities in the active AutoCAD document."
+    },
+    {
+      "name": "get_entity_info",
+      "description": "Get information for an entity by its session-local identifier."
+    },
+    {
+      "name": "generate_constrained_code",
+      "description": "Generate reviewed source text from bounded literal recipes; never execute it."
+    },
+    {
+      "name": "unfold_surface",
+      "description": "Unfold a supplied bounded triangular mesh into an independently verified 2D layout. Uses explicit seams and units; does not read or modify AutoCAD."
+    }
+  ],
+  "resources": [
+    {
+      "uri": "autocad://server-status",
+      "description": "Current MCP server and AutoCAD connection status"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "autocad-help",
+      "description": "Get help with registered AutoCAD MCP tools"
+    }
+  ],
+  "requirements": {
+    "python": ">=3.12",
+    "os": [
+      "windows"
+    ],
+    "dependencies": [
+      "Full AutoCAD 2021-2026 installed on Windows",
+      "Python 3.12 or newer",
+      "Windows COM support for AutoCAD automation"
+    ]
+  },
+  "installation": {
+    "steps": [
+      "Install a targeted full AutoCAD 2021-2026 release on Windows",
+      "Install Python 3.12 or newer and uv",
+      "Install development dependencies with: uv sync --frozen --group dev",
+      "Start the stdio server with: uv run python -m autocad_mcp.server"
+    ]
+  }
+}
